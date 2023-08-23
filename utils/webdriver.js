@@ -1,14 +1,38 @@
 const { Builder } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const firefox = require('selenium-webdriver/firefox');
 
-const options = new chrome.Options();
-options.addArguments('--start-maximized'); // To maximize the Chrome window
+class Webdriver {
 
-const driver = new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(options)
-    .build();
+    constructor(browser) {
+        this.browser = browser.toLowerCase();
 
-module.exports = {
-    getDriver: () => driver
-};
+        if (this.browser !== 'chrome' && this.browser !== 'firefox') {
+            throw new Error('Invalid browser specified');
+        }
+    }
+
+    getDriver() {
+        if (this.browser === 'chrome') {
+            const options = new chrome.Options().addArguments('--start-maximized');
+            this.driver = new Builder()
+                .forBrowser('chrome')
+                .setChromeOptions(options)
+                .build();
+                
+        } else if (this.browser === 'firefox') {
+            const options = new firefox.Options().windowSize({ width: 1920, height: 1080 });
+            this.driver = new Builder()
+                .forBrowser('firefox')
+                .setFirefoxOptions(options)
+                .build();
+        } else {
+            throw new Error('Invalid browser specified');
+        }
+
+        return this.driver;
+    }
+
+}
+
+module.exports = Webdriver;

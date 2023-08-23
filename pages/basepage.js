@@ -1,8 +1,9 @@
-const webdriver = require('../utils/webdriver');
+const Webdriver = require('../utils/webdriver');
+const browser = 'chrome';
 
 class BasePage {
     constructor() {
-        this.driver = webdriver.getDriver();
+        this.driver = new Webdriver(browser).getDriver();
     }
 
     open(url) {
